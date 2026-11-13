@@ -1,1 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Baby Bliss | Infant Clothing</title>
+<link rel="icon" href="logo.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#243560;--rose:#C9948F;--rose-soft:#F6E9E7;--ink:#2b2f3a;--line:#eadcda}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Nunito Sans',system-ui,sans-serif;color:var(--ink);background:#fff;line-height:1.5}
+h1,h2,.serif{font-family:'Cormorant Garamond',Georgia,serif;color:var(--navy)}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
+header img{height:64px;width:auto}
+.wa{background:var(--navy);color:#fff;text-decoration:none;padding:10px 16px;border-radius:24px;font-weight:600;font-size:14px;border:0;cursor:pointer;display:inline-block;text-align:center}
+.wa:hover{background:#1a2748}
+.hero{text-align:center;padding:22px 16px 8px}
+.hero h1{font-size:30px;font-weight:600}
+.hero p{color:#666;font-size:14px}
+.filters{padding:10px 14px}
+.fg{margin-bottom:8px}
+.fg b{display:block;font-size:12px;color:var(--navy);margin-bottom:4px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chip{flex:0 0 auto;border:1px solid var(--rose);background:#fff;color:var(--navy);padding:6px 13px;border-radius:20px;font-size:13px;cursor:pointer;font-family:inherit}
+.chip.on{background:var(--rose);color:#fff}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:4px 14px 10px;font-size:13px;color:#666}
+.bar label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 14px 24px;max-width:1000px;margin:auto}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+.card{cursor:pointer;position:relative;text-align:left;background:none;border:0;font-family:inherit;color:inherit;padding:0}
+.ph{aspect-ratio:3/4;border-radius:14px;background:var(--rose-soft);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;font-size:40px}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.card h3{font-size:15px;font-weight:600;margin-top:6px;color:var(--navy)}
+.card small{color:#777;font-size:12px}
+.tag{position:absolute;top:8px;left:8px;background:var(--rose);color:#fff;font-size:12px;padding:3px 10px;border-radius:12px;z-index:2}
+.sold .ph img{opacity:.55}
+.msg{grid-column:1/-1;text-align:center;color:#777;padding:30px 10px}
+footer{background:var(--rose-soft);text-align:center;padding:22px 16px;font-size:14px}
+footer .serif{font-size:20px}
+#modal{position:fixed;inset:0;background:rgba(36,53,96,.5);display:none;z-index:20;align-items:flex-end;justify-content:center}
+#modal.open{display:flex}
+.sheet{background:#fff;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;border-radius:20px 20px 0 0;padding-bottom:16px}
+.gal{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}
+.gal div{flex:0 0 100%;scroll-snap-align:center;aspect-ratio:3/4;background:var(--rose-soft);display:flex;align-items:center;justify-content:center;font-size:60px}
+.gal img{width:100%;height:100%;object-fit:cover}
+.info{padding:14px 18px}
+.info h2{font-size:26px}
+.info p{font-size:14px;color:#555;margin:2px 0 12px}
+.info .wa{display:block;padding:13px}
+.info .wa.off{background:#bbb;pointer-events:none}
+.x{position:absolute;right:12px;top:12px;background:#fff;border:0;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer;z-index:3;color:var(--navy)}
+.sheetwrap{position:relative;width:100%;max-width:520px}
+.hint{font-size:12px;color:#888;text-align:center;padding-top:6px}
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.jpg" alt="Baby Bliss Infant Clothing">
+  <a class="wa" id="topwa" target="_blank" rel="noopener">Chat on WhatsApp</a>
+</header>
+<section class="hero">
+  <h1>Soft clothes for little ones</h1>
+  <p>Pick an outfit, then order on WhatsApp. Pay on delivery.</p>
+</section>
+<section class="filters" id="filters"></section>
+<div class="bar"><span id="count"></span><label><input type="checkbox" id="showSold"> Show sold items</label></div>
+<main class="grid" id="grid"><p class="msg">Loading clothes...</p></main>
+<footer>
+  <div class="serif">Baby Bliss</div>
+  <p>Pay on delivery. Message us for prices and delivery to your area.</p>
+  <p>WhatsApp: 0742 050 267</p>
+</footer>
+<div id="modal"><div class="sheetwrap"><button class="x" id="close" aria-label="Close">&times;</button><div class="sheet" id="sheet"></div></div></div>
 
+<script>
+/* ===== SETTINGS: change these only ===== */
+const WHATSAPP = "254742050267";
+const SHEET_CSV_URL = "";   // Paste your Google Sheet CSV link between the quotes
+/* ======================================= */
+
+const SAMPLE = `Code,Name,Age,Type,Gender,Season,Photos,InStock
+BB101,Pink Dress,3-6 months,Dress,Girl,Warm,3,Yes
+BB102,Blue Romper,0-3 months,Romper,Boy,Warm,2,Yes
+BB103,Cozy Sleepsuit,Newborn,Sleepsuit,Unisex,Cold,2,No`;
+
+const FILTERS = [["Age","Age"],["Type","Type"],["Gender","Boy / Girl"],["Season","Season"]];
+const state = {Age:"",Type:"",Gender:"",Season:""};
+let items = [];
+
+const wl = t => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(t)}`;
+document.getElementById("topwa").href = wl("Hi Baby Bliss! I'd like to ask about your baby clothes.");
+
+function parseCSV(t){
+  const rows=[];let r=[],c="",q=false;
+  for(let i=0;i<t.length;i++){const ch=t[i];
+    if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}
+    else if(ch=='"')q=true;
+    else if(ch==","){r.push(c);c=""}
+    else if(ch=="\n"||ch=="\r"){if(ch=="\r"&&t[i+1]=="\n")i++;r.push(c);c="";rows.push(r);r=[]}
+    else c+=ch}
+  if(c||r.length){r.push(c);rows.push(r)}
+  const h=rows.shift().map(x=>x.trim());
+  return rows.filter(r=>r.some(x=>x.trim())).map(r=>Object.fromEntries(h.map((k,i)=>[k,(r[i]||"").trim()])));
+}
+
+async function load(){
+  try{
+    const txt = SHEET_CSV_URL ? await (await fetch(SHEET_CSV_URL)).text() : SAMPLE;
+    items = parseCSV(txt).filter(i=>i.Code && i.Name);
+    items.forEach(i=>i.sold = /^(no|n|sold)/i.test(i.InStock||""));
+    buildFilters(); render();
+  }catch(e){
+    document.getElementById("grid").innerHTML='<p class="msg">Could not load the clothes. Please refresh, or message us on WhatsApp.</p>';
+  }
+}
+
+function buildFilters(){
+  const box=document.getElementById("filters");box.innerHTML="";
+  FILTERS.forEach(([key,label])=>{
+    const vals=[...new Set(items.map(i=>i[key]).filter(Boolean))];
+    if(!vals.length)return;
+    const g=document.createElement("div");g.className="fg";
+    g.innerHTML=`<b>${label}</b><div class="chips"></div>`;
+    const chips=g.querySelector(".chips");
+    ["All",...vals].forEach(v=>{
+      const b=document.createElement("button");
+      b.className="chip"+((state[key]===(v==="All"?"":v))?" on":"");
+      b.textContent=v;
+      b.onclick=()=>{state[key]=v==="All"?"":v;buildFilters();render()};
+      chips.appendChild(b)});
+    box.appendChild(g)});
+}
+
+function photo(i,n){return `images/${i.Code}-${n}.jpg`}
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function render(){
+  const showSold=document.getElementById("showSold").checked;
+  let list=items.filter(i=>FILTERS.every(([k])=>!state[k]||i[k]===state[k]) && (showSold||!i.sold));
+  list.sort((a,b)=>a.sold-b.sold);
+  document.getElementById("count").textContent=list.length+" item"+(list.length==1?"":"s");
+  const g=document.getElementById("grid");
+  if(!list.length){g.innerHTML='<p class="msg">Nothing here yet. Try another filter, or message us on WhatsApp.</p>';return}
+  g.innerHTML="";
+  list.forEach(i=>{
+    const b=document.createElement("button");b.className="card"+(i.sold?" sold":"");
+    b.innerHTML=`<div class="ph">${i.sold?'<span class="tag">Sold out</span>':''}<img loading="lazy" src="${photo(i,1)}" alt="${esc(i.Name)}" onerror="this.replaceWith(document.createTextNode('👶'))"></div><h3>${esc(i.Name)}</h3><small>${esc(i.Age)}${i.Type?" · "+esc(i.Type):""}</small>`;
+    b.onclick=()=>openItem(i);g.appendChild(b)});
+}
+
+function openItem(i){
+  const n=Math.max(1,parseInt(i.Photos)||1);
+  let pics="";
+  for(let k=1;k<=n;k++)pics+=`<div><img loading="lazy" src="${photo(i,k)}" alt="${esc(i.Name)} photo ${k}" onerror="this.replaceWith(document.createTextNode('👶'))"></div>`;
+  const msg=`Hi Baby Bliss! I'd like to order: ${i.Name} (Item ${i.Code}), ${i.Age}.`;
+  document.getElementById("sheet").innerHTML=`<div class="gal">${pics}</div>${n>1?'<p class="hint">Swipe to see more photos</p>':''}
+  <div class="info"><h2>${esc(i.Name)}</h2><p>${esc([i.Age,i.Type,i.Gender,i.Season].filter(Boolean).join(" · "))}<br>Message us for the price. Pay on delivery.</p>
+  ${i.sold?'<a class="wa off">Sold out</a>':`<a class="wa" target="_blank" rel="noopener" href="${wl(msg)}">Order on WhatsApp</a>`}</div>`;
+  document.getElementById("modal").classList.add("open");
+}
+
+const modal=document.getElementById("modal");
+document.getElementById("close").onclick=()=>modal.classList.remove("open");
+modal.onclick=e=>{if(e.target===modal)modal.classList.remove("open")};
+document.getElementById("showSold").onchange=render;
+load();
+</script>
+</body>
+  </html>
