@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Baby Bliss | Infant Clothing</title>
-<link rel="icon" href="logo.jpg">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='none' stroke='%23C9948F' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M35 16 Q50 25 65 16 L88 30 L78 46 L68 40 L68 74 Q68 84 56 88 L44 88 Q32 84 32 74 L32 40 L22 46 L12 30 Z'/%3E%3Cpath d='M35 16 L44 29 L50 22 L56 29 L65 16'/%3E%3Cline x1='50' y1='22' x2='50' y2='88'/%3E%3Cpath d='M59 38 C59 35 55 35 55 38 C55 41 59 44 59 44 C59 44 63 41 63 38 C63 35 59 35 59 38 Z'/%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#243560;--rose:#C9948F;--rose-soft:#F6E9E7;--ink:#2b2f3a;--line:#eadcda}
@@ -12,8 +12,11 @@
 body{font-family:'Nunito Sans',system-ui,sans-serif;color:var(--ink);background:#fff;line-height:1.5}
 h1,h2,.serif{font-family:'Cormorant Garamond',Georgia,serif;color:var(--navy)}
 header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
-header img{height:64px;width:auto}
-.wa{background:var(--navy);color:#fff;text-decoration:none;padding:10px 16px;border-radius:24px;font-weight:600;font-size:14px;border:0;cursor:pointer;display:inline-block;text-align:center}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand-text{line-height:1.1}
+.brand-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:600;letter-spacing:1.5px;color:var(--navy)}
+.brand-sub{font-size:9px;letter-spacing:2.5px;color:var(--ink);margin-top:2px}
+.wa{background:var(--navy);color:#fff;text-decoration:none;padding:10px 16px;border-radius:24px;font-weight:600;font-size:14px;border:0;cursor:pointer;display:inline-block;text-align:center;white-space:nowrap}
 .wa:hover{background:#1a2748}
 .hero{text-align:center;padding:22px 16px 8px}
 .hero h1{font-size:30px;font-weight:600}
@@ -56,7 +59,22 @@ footer .serif{font-size:20px}
 </head>
 <body>
 <header>
-  <img src="logo.jpg" alt="Baby Bliss Infant Clothing">
+  <div class="brand" aria-label="Baby Bliss Infant Clothing">
+    <svg width="46" height="46" viewBox="0 0 100 100" fill="none" stroke="#C9948F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M35 16 Q50 25 65 16 L88 30 L78 46 L68 40 L68 74 Q68 84 56 88 L44 88 Q32 84 32 74 L32 40 L22 46 L12 30 Z"/>
+      <path d="M35 16 L44 29 L50 22 L56 29 L65 16"/>
+      <line x1="50" y1="22" x2="50" y2="88"/>
+      <circle cx="50" cy="34" r="1.5" fill="#C9948F"/>
+      <circle cx="50" cy="48" r="1.5" fill="#C9948F"/>
+      <circle cx="50" cy="62" r="1.5" fill="#C9948F"/>
+      <circle cx="50" cy="76" r="1.5" fill="#C9948F"/>
+      <path d="M59 38 C59 35 55 35 55 38 C55 41 59 44 59 44 C59 44 63 41 63 38 C63 35 59 35 59 38 Z"/>
+    </svg>
+    <div class="brand-text">
+      <div class="brand-title">BABY BLISS</div>
+      <div class="brand-sub">INFANT CLOTHING</div>
+    </div>
+  </div>
   <a class="wa" id="topwa" target="_blank" rel="noopener">Chat on WhatsApp</a>
 </header>
 <section class="hero">
@@ -167,4 +185,4 @@ document.getElementById("showSold").onchange=render;
 load();
 </script>
 </body>
-  </html>
+</html>
